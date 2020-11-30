@@ -35,7 +35,7 @@ Layer layer4 = {
   
 
 Layer layer3 = {		/**< Layer with an orange circle */
-  (AbShape *)&circle8,
+  (AbShape *)&circle2,
   {(screenWidth/2)+10, (screenHeight/2)+5}, /**< bit below & right of center */
   {0,0}, {0,0},				    /* last & next pos */
   COLOR_VIOLET,
@@ -63,9 +63,21 @@ Layer layer0 = {		/**< Layer with an orange circle */
   (AbShape *)&circle14,
   {(screenWidth/2)+10, (screenHeight/2)+5}, /**< bit below & right of center */
   {0,0}, {0,0},				    /* last & next pos */
+  COLOR_BLACK,
+  &layer1,
+};
+
+Layer layer01 = {		/**< Layer with an orange circle */
+  (AbShape *)&circle14,
+  {(screenWidth/2)+10, (screenHeight/2)+5}, /**< bit below & right of center */
+  {0,0}, {0,0},				    /* last & next pos */
   COLOR_ORANGE,
   &layer1,
 };
+
+Layer newLayer(){
+
+}
 
 /** Moving Layer
  *  Linked list of layer references
@@ -78,9 +90,9 @@ typedef struct MovLayer_s {
 } MovLayer;
 
 /* initial value of {0,0} will be overwritten */
-MovLayer ml3 = { &layer3, {1,1}, 0 }; /**< not all layers move */
-MovLayer ml1 = { &layer1, {1,2}, &ml3 }; 
-MovLayer ml0 = { &layer0, {2,1}, &ml1 }; 
+MovLayer ml3 = { &layer0, {1,1}, 0 }; /**< not all layers move */
+MovLayer ml1 = { &layer3, {1,2}, &ml3 };
+MovLayer ml0 = { &layer1, {3,1}, &ml1 }; 
 
 void movLayerDraw(MovLayer *movLayers, Layer *layers)
 {
@@ -195,7 +207,7 @@ void main()
 void wdt_c_handler()
 {
   static short count = 0;
-  P1OUT |= GREEN_LED;		      /**< Green LED on when cpu on */
+  //P1OUT |= GREEN_LED;		      /**< Green LED on when cpu on*/ 
   count ++;
   if (count == 15) {
     mlAdvance(&ml0, &fieldFence);
