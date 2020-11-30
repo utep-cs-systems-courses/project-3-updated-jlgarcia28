@@ -171,20 +171,24 @@ Region fieldFence;		/**< fence around playing field  */
 void move_ML0(u_int switches){
   if(!(switches & (1<<0)) && collision == 0){
     ml0.velocity.axes[0] = -1;
-    
+
+    drawString5x7(14,25, "Left ", COLOR_RED, COLOR_BLUE);
   }else if(!(switches & (1<<3))){
     ml0.velocity.axes[0] = 1;
-    
+
+    drawString5x7(14,25, "Right", COLOR_RED, COLOR_BLUE);
   }else if(!(switches & (1<<2))){
     ml0.velocity.axes[1] = 1;
-    
+
+    drawString5x7(14,25, "Down   ", COLOR_RED, COLOR_BLUE);
   }else if(!(switches & (1<<1))){
     ml0.velocity.axes[1] = -1;
     
+    drawString5x7(14,25, "Up      ", COLOR_RED, COLOR_BLUE);
   }else{
     ml0.velocity.axes[1] = 0;
     ml0.velocity.axes[0] = 0;
-    
+    drawString5x7(14,25, "        ", COLOR_RED, COLOR_BLUE);
   }
 
 }
