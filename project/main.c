@@ -13,6 +13,7 @@
 #include <p2switches.h>
 #include <shape.h>
 #include <abCircle.h>
+#include "buzzer.h"
 
 #define GREEN_LED BIT6
 
@@ -141,7 +142,7 @@ void mlAdvance(MovLayer *ml, Region *fence)
   
   
   for (; ml; ml = ml->next) {
- 
+    rest();
     vec2Add(&newPos, &ml->layer->posNext, &ml->velocity);
     abShapeGetBounds(ml->layer->abShape, &newPos, &shapeBoundary);
     
@@ -150,7 +151,7 @@ void mlAdvance(MovLayer *ml, Region *fence)
 	  (shapeBoundary.botRight.axes[axis] > fence->botRight.axes[axis]) ) {
 	int velocity = ml->velocity.axes[axis] = -ml->velocity.axes[axis];
 	newPos.axes[axis] += (2*velocity);
-
+	buzzer_set_period(5000);
 	
       }/**< if outside of fence */
        /**< if outside of fence */
