@@ -168,7 +168,26 @@ int redrawScreen = 1;           /**< Boolean for whether screen needs to be redr
 Region fieldFence;		/**< fence around playing field  */
 
 
+void move_ML0(u_int switches){
+  if(!(switches & (1<<0)) && collision == 0){
+    ml0.velocity.axes[0] = -1;
+    
+  }else if(!(switches & (1<<3))){
+    ml0.velocity.axes[0] = 1;
+    
+  }else if(!(switches & (1<<2))){
+    ml0.velocity.axes[1] = 1;
+    
+  }else if(!(switches & (1<<1))){
+    ml0.velocity.axes[1] = -1;
+    
+  }else{
+    ml0.velocity.axes[1] = 0;
+    ml0.velocity.axes[0] = 0;
+    
+  }
 
+}
 
 /** Initializes everything, enables interrupts and green LED, 
  *  and handles the rendering for the screen
@@ -207,7 +226,7 @@ void main()
       or_sr(0x10);	      /**< CPU OFF */
     }
 
-
+    move_ML0(switches);
   
     drawString8x12(12,12, "Direction", COLOR_BLACK, COLOR_BLUE);
     
