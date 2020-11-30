@@ -207,6 +207,9 @@ void main()
       or_sr(0x10);	      /**< CPU OFF */
     }
 
+
+  
+    drawString8x12(12,12, "Direction", COLOR_BLACK, COLOR_BLUE);
     
     P1OUT |= GREEN_LED;       /**< Green led on when CPU on */
     redrawScreen = 0;
