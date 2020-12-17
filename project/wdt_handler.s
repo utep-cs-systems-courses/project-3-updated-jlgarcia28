@@ -3,7 +3,7 @@
 	.balign 2
 	.global	WDT
 	.section	__interrupt_vector_11,"ax",@progbits
-	.word	WDT
+ 	.word	WDT
 	.text
 	
 
@@ -51,6 +51,7 @@ WDT:
 	jz	ball_no_move
 	and	#0xffef, 0(r1)	; clear CPU off in saved SR
 ball_no_move:	
+
 	RETI
 	.size	WDT, .-WDT
 	.local	count

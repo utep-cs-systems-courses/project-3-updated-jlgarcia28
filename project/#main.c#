@@ -169,7 +169,7 @@ Region fieldFence;		/**< fence around playing field  */
 
 
 void move_ML0(u_int switches){
-  if(!(switches & (1<<0))){
+  if(!(switches & (1<<0)) && collision == 0){
     ml0.velocity.axes[0] = -1;
     buzzer_set_period(2000);
     drawString5x7(14,25, "Left ", COLOR_RED, COLOR_BLUE);
@@ -237,7 +237,7 @@ void main()
     P1OUT |= GREEN_LED;       /**< Green led on when CPU on */
     redrawScreen = 0;
     movLayerDraw(&ml0, &layer0);
-  }
+   }
 }
 
 /** Watchdog timer interrupt handler. 15 interrupts/sec */
