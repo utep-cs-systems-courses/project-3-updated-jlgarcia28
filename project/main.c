@@ -166,7 +166,7 @@ u_int bgColor = COLOR_BLUE;     /**< The background color */
 int redrawScreen = 1;           /**< Boolean for whether screen needs to be redrawn */
 
 Region fieldFence;		/**< fence around playing field  */
-
+int switches;
 
 void move_ML0(u_int switches){
   if(!(switches & (1<<0))){
@@ -219,7 +219,7 @@ void main()
   or_sr(0x8);	              /**< GIE (enable interrupts) */
 
   
-  u_int switches;
+  
   
   for(;;) {
 
@@ -255,4 +255,9 @@ void wdt_c_handler()
     count = 0;
   } 
   P1OUT &= ~GREEN_LED;		    /**< Green LED off when cpu off */
+}
+
+void movRectangle(){
+
+
 }

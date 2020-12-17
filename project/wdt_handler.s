@@ -8,6 +8,8 @@
 	
 
 	.extern redrawScreen
+	.extern switches
+	.extern movRectangle
 	.extern wdt_c_handler
 WDT:
 ; start of function
