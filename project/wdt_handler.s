@@ -8,9 +8,18 @@
 	
 
 	.extern redrawScreen
-	.extern switches
-	.extern movRectangle
 	.extern wdt_c_handler
+	.extern moveLeft
+	.extern moveRight
+	.extern moveUp
+	.extern moveDown
+	.extern buttons
+
+jt:
+	.word left
+	.word up
+	.word down
+	.word right
 WDT:
 ; start of function
 ; attributes: interrupt 
@@ -51,6 +60,14 @@ WDT:
 	POP	R15
 	cmp	#0, &redrawScreen
 	jz	ball_no_move
+				;Jump Table
+
+	cmp     #4,&buttons
+        jhs     ball_no_move
+	mov     &buttons,r13
+	add     r13,r13
+	mov     jt(r13),r0
+	
 	and	#0xffef, 0(r1)	; clear CPU off in saved SR
 ball_no_move:	
 
@@ -59,3 +76,21 @@ ball_no_move:
 	.local	count
 	.comm	count,1,1
 	.ident	"GCC: (GNU) 4.9.1 20140707 (prerelease (msp430-14r1-364)) (GNUPro 14r1) (Based on: GCC 4.8 GDB 7.7 Binutils 2.24 Newlib 2.1)"
+
+left:
+	call #moveLeft
+	jmp default
+right:
+	call #moveRight
+	jmp default
+up:
+	call #moveUp
+	jmp default
+down:
+	call #moveDown
+	jmp default
+
+default:
+	mov #4, &buttons
+	jmp  ball_no_move
+	

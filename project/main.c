@@ -14,9 +14,12 @@
 #include <shape.h>
 #include <abCircle.h>
 #include "buzzer.h"
+#include "button_state.h"
+#include "led.h"
 
 #define GREEN_LED BIT6
 
+int buttons = 4;
 
 AbRect rect10 = {abRectGetBounds, abRectCheck, {22,10}}; /**< 10x10 rectangle */
 AbRArrow rightArrow = {abRArrowGetBounds, abRArrowCheck, 10};
@@ -170,21 +173,13 @@ int switches;
 
 void move_ML0(u_int switches){
   if(!(switches & (1<<0))){
-    ml0.velocity.axes[0] = -1;
-    buzzer_set_period(2000);
-    drawString5x7(14,25, "Left ", COLOR_RED, COLOR_BLUE);
+    buttons = 0;
   }else if(!(switches & (1<<3))){
-    ml0.velocity.axes[0] = 1;
-    buzzer_set_period(2000);
-    drawString5x7(14,25, "Right", COLOR_RED, COLOR_BLUE);
+    buttons = 3;
   }else if(!(switches & (1<<2))){
-    ml0.velocity.axes[1] = 1;
-    buzzer_set_period(2000);
-    drawString5x7(14,25, "Down   ", COLOR_RED, COLOR_BLUE);
+    buttons = 2;
   }else if(!(switches & (1<<1))){
-    ml0.velocity.axes[1] = -1;
-    buzzer_set_period(2000);
-    drawString5x7(14,25, "Up      ", COLOR_RED, COLOR_BLUE);
+    buttons = 1;
   }else{
     ml0.velocity.axes[1] = 0;
     ml0.velocity.axes[0] = 0;
@@ -193,20 +188,45 @@ void move_ML0(u_int switches){
 
 }
 
+void moveLeft(){
+  ml0.velocity.axes[0] = -1;
+  buzzer_set_period(2000);
+  drawString5x7(14,25, "Left ", COLOR_RED, COLOR_BLUE);
+}
+void moveRight(){
+    ml0.velocity.axes[0] = 1;
+    buzzer_set_period(2000);
+    drawString5x7(14,25, "Right", COLOR_RED, COLOR_BLUE);
+
+}
+void moveDown(){
+    ml0.velocity.axes[1] = 1;
+    buzzer_set_period(2000);
+    drawString5x7(14,25, "Down   ", COLOR_RED, COLOR_BLUE);
+
+}
+void moveUp(){
+    ml0.velocity.axes[1] = -1;
+    buzzer_set_period(2000);
+    drawString5x7(14,25, "Up      ", COLOR_RED, COLOR_BLUE);
+
+}
+
 /** Initializes everything, enables interrupts and green LED, 
  *  and handles the rendering for the screen
  */
 void main()
 {
-  P1DIR |= GREEN_LED;		/**< Green led on when CPU on */		
-  P1OUT |= GREEN_LED;
+  //P1DIR |= GREEN_LED;		/**< Green led on when CPU on */		
+  //P1OUT |= GREEN_LED;
 
   configureClocks();
   lcd_init();
   shapeInit();
   buzzer_init();
   p2sw_init(15);
-
+  led_init();
+  
   shapeInit();
 
   layerInit(&layer0);
@@ -216,17 +236,14 @@ void main()
   layerGetBounds(&fieldLayer, &fieldFence);
  
   enableWDTInterrupts();      /**< enable periodic interrupt */
-  or_sr(0x8);	              /**< GIE (enable interrupts) */
-
-  
-  
+  or_sr(0x8);	              /**< GIE (enable interrupts) */ 
   
   for(;;) {
 
     switches = p2sw_read();
     
     while (!redrawScreen) { /**< Pause CPU if screen doesn't need updating */
-      P1OUT &= ~GREEN_LED;    /**< Green led off witHo CPU */
+      //P1OUT &= ~GREEN_LED;    /**< Green led off witHo CPU */
       or_sr(0x10);	      /**< CPU OFF */
     }
 
@@ -234,7 +251,7 @@ void main()
   
     drawString8x12(12,12, "Direction", COLOR_BLACK, COLOR_BLUE);
     
-    P1OUT |= GREEN_LED;       /**< Green led on when CPU on */
+    //P1OUT |= GREEN_LED;       /**< Green led on when CPU on */
     redrawScreen = 0;
     movLayerDraw(&ml0, &layer0);
   }
@@ -244,20 +261,22 @@ void main()
 void wdt_c_handler()
 {
   static short count = 0;
-  P1OUT |= GREEN_LED;		      /**< Green LED on when cpu on */
+  //P1OUT |= GREEN_LED;		      /**< Green LED on when cpu on */
   count ++;
   if (count == 15) {
     mlAdvance(&ml0, &fieldFence);
-  
+    //movRectangle();
     if (p2sw_read())
       redrawScreen = 1;
     redrawScreen = 1;
     count = 0;
   } 
-  P1OUT &= ~GREEN_LED;		    /**< Green LED off when cpu off */
+  //P1OUT &= ~GREEN_LED;		    /**< Green LED off when cpu off */
 }
 
 void movRectangle(){
-
+ml0.velocity.axes[0] = -1;
+//buzzer_set_period(2000);
+    drawString5x7(14,25, "Left ", COLOR_RED, COLOR_BLUE);
 
 }
